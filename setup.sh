@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Detect script location BEFORE any cd operations
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -112,8 +115,7 @@ GITIGNORE
 fi
 echo ""
 
-# ----- Step 7: Detect script location -----
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# ----- Step 7: Set template directory -----
 TEMPLATE_DIR="$SCRIPT_DIR/templates/$TOOL"
 
 if [ ! -d "$TEMPLATE_DIR" ]; then
@@ -122,65 +124,84 @@ if [ ! -d "$TEMPLATE_DIR" ]; then
     exit 1
 fi
 
-# ----- Step 8: Create Schema -----
+# ----- Step 8: Create wiki pages via Python (handles multiline templates) -----
 echo -e "${BOLD}Creating wiki pages...${NC}"
 
-# Build namespace list for templates
-if [ "$TOOL" = "logseq" ]; then
-    # Logseq: Schema page
-    SCHEMA_FILE="$pages_path/Wiki___Schema.md"
-    NS_LIST=""
-    for ns in $NAMESPACES; do
-        NS_LIST="$NS_LIST\n\t- Wiki/$ns"
-    done
-    sed "s|{{NAMESPACES}}|$(echo -e "$NS_LIST")|g" "$TEMPLATE_DIR/Schema.md" > "$SCHEMA_FILE"
-    echo -e "  ${GREEN}Created: Wiki/Schema${NC}"
+TODAY=$(date +%Y-%m-%d)
 
-    # Dashboard
-    DASHBOARD_FILE="$pages_path/Wiki___Dashboard.md"
-    NS_LINKS=""
-    for ns in $NAMESPACES; do
-        NS_LINKS="$NS_LINKS\n\t- [[Wiki/$ns]]"
-    done
-    sed "s|{{NAMESPACE_LINKS}}|$(echo -e "$NS_LINKS")|g" "$TEMPLATE_DIR/Dashboard.md" > "$DASHBOARD_FILE"
-    echo -e "  ${GREEN}Created: Wiki/Dashboard${NC}"
+python3 << PYEOF
+import os
 
-    # Hub pages for each namespace
-    for ns in $NAMESPACES; do
-        HUB_FILE="$pages_path/Wiki___${ns}.md"
-        sed "s|{{NAMESPACE}}|$ns|g" "$TEMPLATE_DIR/Hub.md" > "$HUB_FILE"
-        echo -e "  ${GREEN}Created: Wiki/$ns${NC}"
-    done
+tool = "$TOOL"
+pages_path = "$pages_path"
+wiki_path = "$wiki_path"
+template_dir = "$TEMPLATE_DIR"
+namespaces = "$NAMESPACES".split()
+today = "$TODAY"
 
-else
-    # Obsidian: folder hierarchy
-    WIKI_DIR="$wiki_path/Wiki"
-    mkdir -p "$WIKI_DIR"
+def read_template(name):
+    with open(os.path.join(template_dir, name)) as f:
+        return f.read()
 
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w') as f:
+        f.write(content)
+
+if tool == "logseq":
     # Schema
-    NS_LIST=""
-    for ns in $NAMESPACES; do
-        NS_LIST="$NS_LIST\n- Wiki/$ns"
-    done
-    sed "s|{{NAMESPACES}}|$(echo -e "$NS_LIST")|g" "$TEMPLATE_DIR/Schema.md" > "$WIKI_DIR/Schema.md"
-    echo -e "  ${GREEN}Created: Wiki/Schema.md${NC}"
+    ns_list = ", ".join(f"Wiki/{ns}" for ns in namespaces)
+    schema = read_template("Schema.md")
+    schema = schema.replace("{{NAMESPACES}}", ns_list)
+    schema = schema.replace("{{DATE}}", today)
+    write_file(os.path.join(pages_path, "Wiki___Schema.md"), schema)
+    print(f"  Created: Wiki/Schema")
 
     # Dashboard
-    NS_LINKS=""
-    for ns in $NAMESPACES; do
-        NS_LINKS="$NS_LINKS\n- [[Wiki/$ns]]"
-    done
-    sed "s|{{NAMESPACE_LINKS}}|$(echo -e "$NS_LINKS")|g" "$TEMPLATE_DIR/Dashboard.md" > "$WIKI_DIR/Dashboard.md"
-    echo -e "  ${GREEN}Created: Wiki/Dashboard.md${NC}"
+    ns_links = "\n".join(f"\t- [[Wiki/{ns}]]" for ns in namespaces)
+    dashboard = read_template("Dashboard.md")
+    dashboard = dashboard.replace("{{NAMESPACE_LINKS}}", ns_links)
+    dashboard = dashboard.replace("{{DATE}}", today)
+    write_file(os.path.join(pages_path, "Wiki___Dashboard.md"), dashboard)
+    print(f"  Created: Wiki/Dashboard")
 
     # Hub pages
-    for ns in $NAMESPACES; do
-        NS_DIR="$WIKI_DIR/$ns"
-        mkdir -p "$NS_DIR"
-        sed "s|{{NAMESPACE}}|$ns|g" "$TEMPLATE_DIR/Hub.md" > "$NS_DIR/_index.md"
-        echo -e "  ${GREEN}Created: Wiki/$ns/_index.md${NC}"
-    done
-fi
+    hub_tpl = read_template("Hub.md")
+    for ns in namespaces:
+        hub = hub_tpl.replace("{{NAMESPACE}}", ns).replace("{{DATE}}", today)
+        write_file(os.path.join(pages_path, f"Wiki___{ns}.md"), hub)
+        print(f"  Created: Wiki/{ns}")
+
+else:
+    wiki_dir = os.path.join(wiki_path, "Wiki")
+    os.makedirs(wiki_dir, exist_ok=True)
+
+    # Schema
+    ns_list = ", ".join(f"Wiki/{ns}" for ns in namespaces)
+    schema = read_template("Schema.md")
+    schema = schema.replace("{{NAMESPACES}}", ns_list)
+    schema = schema.replace("{{DATE}}", today)
+    write_file(os.path.join(wiki_dir, "Schema.md"), schema)
+    print(f"  Created: Wiki/Schema.md")
+
+    # Dashboard
+    ns_links = "\n".join(f"- [[Wiki/{ns}]]" for ns in namespaces)
+    dashboard = read_template("Dashboard.md")
+    dashboard = dashboard.replace("{{NAMESPACE_LINKS}}", ns_links)
+    dashboard = dashboard.replace("{{DATE}}", today)
+    write_file(os.path.join(wiki_dir, "Dashboard.md"), dashboard)
+    print(f"  Created: Wiki/Dashboard.md")
+
+    # Hub pages
+    hub_tpl = read_template("Hub.md")
+    for ns in namespaces:
+        ns_dir = os.path.join(wiki_dir, ns)
+        os.makedirs(ns_dir, exist_ok=True)
+        hub = hub_tpl.replace("{{NAMESPACE}}", ns).replace("{{DATE}}", today)
+        write_file(os.path.join(ns_dir, "_index.md"), hub)
+        print(f"  Created: Wiki/{ns}/_index.md")
+
+PYEOF
 
 # ----- Step 9: Create config.yml -----
 CONFIG_FILE="$wiki_path/llm-wiki.yml"
