@@ -203,7 +203,7 @@ else:
 
 PYEOF
 
-# ----- Step 9: Create config.yml -----
+# ----- Step 9: Create llm-wiki.yml -----
 CONFIG_FILE="$wiki_path/llm-wiki.yml"
 cat > "$CONFIG_FILE" << YAML
 # llm-wiki configuration

@@ -243,23 +243,16 @@ Every number has a date. Decisions have rationale. Open questions are explicit. 
 
 ## Configuration
 
-Copy `config.example.yml` and adjust to your setup:
+`setup.sh` creates `llm-wiki.yml` in your wiki root. You can also create it manually:
 
 ```yaml
-# config.yml -- llm-wiki configuration
+# llm-wiki.yml
 
-# Wiki application
-wiki_app: logseq  # or "obsidian"
+tool: logseq          # or "obsidian"
+wiki_path: ~/Documents/MyWiki/
+pages_dir: pages      # relative to wiki_path
+memory_path: ~/.claude/projects/my-project/memory/
 
-# Paths
-wiki_path: ~/Documents/Logseq/pages       # Where wiki pages live
-memory_path: ~/.claude/memory              # L1 memory directory (excluded from git)
-
-# Schema
-schema_file: Wiki___Schema.md             # Logseq format
-# schema_file: Wiki/Schema.md             # Obsidian format
-
-# Namespaces (customize to your needs)
 namespaces:
   - Business
   - Tech

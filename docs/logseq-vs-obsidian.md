@@ -250,7 +250,7 @@ The schema itself is wiki-app-agnostic at the conceptual level. The same 5 page 
 | Cross-reference | `- [[Wiki/Tech/Strapi]]` | `[[Wiki/Tech/Strapi]]` |
 | Content block | `- Some text here` | `Some text here` |
 
-The `/wiki` skill reads `config.yml` to determine which format to use and adjusts its output accordingly. The schema rules (required properties, lint checks, L1/L2 boundary) are enforced identically in both formats.
+The `/wiki` skill reads `llm-wiki.yml` to determine which format to use and adjusts its output accordingly. The schema rules (required properties, lint checks, L1/L2 boundary) are enforced identically in both formats.
 
 ## Recommendation
 
