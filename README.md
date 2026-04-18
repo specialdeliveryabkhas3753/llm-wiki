@@ -1,5 +1,11 @@
 # llm-wiki
 
+[![License: MIT](https://img.shields.io/github/license/MehmetGoekce/llm-wiki)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki/releases)
+[![Stars](https://img.shields.io/github/stars/MehmetGoekce/llm-wiki?style=social)](https://github.com/MehmetGoekce/llm-wiki/stargazers)
+[![Top Language](https://img.shields.io/github/languages/top/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki)
+[![Last Commit](https://img.shields.io/github/last-commit/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki/commits)
+
 Build [Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) with Claude Code. Two-layer cache architecture (L1/L2). Supports Logseq and Obsidian.
 
 ```mermaid
@@ -295,6 +301,14 @@ No system is perfect. Some things to know:
 - **Two systems means you need a clear boundary.** Having both L1 and L2 means you could accidentally put the same information in both places. The lint rule for L1/L2 duplicates exists precisely for this reason.
 - **Parallel agents can conflict.** If you have multiple Claude sessions writing to wiki files simultaneously, concurrent edits can cause conflicts. Treat wiki files as a shared resource.
 - **Start with fewer hub pages.** Let them emerge organically from ingest operations rather than creating empty hubs upfront.
+
+## Documentation
+
+- [FAQ](docs/faq.md) — Common questions before you run `setup.sh`
+- [Troubleshooting](docs/troubleshooting.md) — Setup, integration, and runtime issues
+- [L1/L2 Architecture](docs/l1-l2-architecture.md) — Why two layers, how to route knowledge
+- [Schema Reference](docs/schema-reference.md) — Page types, properties, lint rules
+- [Logseq vs. Obsidian](docs/logseq-vs-obsidian.md) — Detailed comparison and migration notes
 
 ## Credits
 

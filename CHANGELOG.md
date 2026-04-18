@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-04-18
+
+### Added
+
+- README badge row — license, release, stars, top language, last commit
+- `docs/faq.md` — 10 questions first-time users actually ask (paid plan, L1/L2 rationale, tool choice, credential safety, wiki growth thresholds)
+- `docs/troubleshooting.md` — setup, wiki-app integration, Claude Code integration, and wiki-growth issues with symptom → cause → fix format
+- README "Documentation" section linking all five docs pages
+
+### Notes
+
+- Documentation-only release. No code, schema, or command changes.
+- Focus: adoption friction. The v1.1.0 feedback pointed at missing onboarding docs, not missing features.
+
 ## [1.1.0] - 2026-04-10
 
 ### Added
@@ -52,5 +66,6 @@ First stable release.
 - Credential leak detection (lint rule 6) scans for tokens, passwords, secrets
 - L1/L2 security boundary: credentials stay in L1 (git-excluded), wiki is git-tracked
 
+[1.1.1]: https://github.com/MehmetGoekce/llm-wiki/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/MehmetGoekce/llm-wiki/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/MehmetGoekce/llm-wiki/releases/tag/v1.0.0
